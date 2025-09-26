@@ -1,0 +1,67 @@
+
+
+services:
+  # -------------------------------
+  # Base de datos PostgreSQL
+  # -------------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: medcore-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=medcoreuser
+      - POSTGRES_PASSWORD=medcoreuserpassword
+      - POSTGRES_DB=medcore_auth
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - medcore-network
+
+  # -------------------------------
+  # Backend: Microservicio de Autenticación
+  # -------------------------------
+  ms-auth:
+    build: ./ms-auth
+    container_name: ms-auth
+    restart: unless-stopped
+    ports:
+      - "3001:3000"  
+    environment:
+      - DATABASE_URL=postgresql://medcoreuser:medcoreuserpassword@postgres:5432/medcore_auth
+      - JWT_SECRET=tu_jwt_secreto_super_seguro
+      - PORT=3000     
+    depends_on:
+      - postgres
+    networks:
+      - medcore-network
+
+  # -------------------------------
+  # Frontend: Next.js App
+  # -------------------------------
+  medcore-frontend:
+    build: ./medcore-frontend
+    container_name: medcore-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"  # Accedes desde http://localhost:3000
+    environment:
+      - PORT=3000    # ← Next.js lo usará para el servidor
+    depends_on:
+      - ms-auth     
+    networks:
+      - medcore-network
+
+# -------------------------------
+# Volúmenes
+# -------------------------------
+volumes:
+  postgres_data:
+
+# -------------------------------
+# Redes
+# -------------------------------
+networks:
+  medcore-network:
+    driver: bridge
