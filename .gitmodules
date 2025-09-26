@@ -1,0 +1,6 @@
+[submodule "ms-auth"]
+	path = ms-auth
+	url = https://github.com/MedCore-Microservices/Auth-ms-Medcore.git
+[submodule "medcore-frontend"]
+	path = medcore-frontend
+	url = https://github.com/MedCore-Microservices/Frontend-Medcore.git
