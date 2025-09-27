@@ -48,6 +48,11 @@ services:
       - "3000:3000"  # Accedes desde http://localhost:3000
     environment:
       - PORT=3000    # ← Next.js lo usará para el servidor
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - NEXTAUTH_TRUST_HOST=true
+      - AUTH_SECRET=1P0whXBalPnjPzp1/WbVNCWXFEHmWwnKO0BPn+q3/zY=
+      - NEXTAUTH_SECRET=1P0whXBalPnjPzp1/WbVNCWXFEHmWwnKO0BPn+q3/zY=
+      
     depends_on:
       - ms-auth     
     networks:
