@@ -18,6 +18,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - medcore-network
+    
 
   # -------------------------------
   # Backend: Microservicio de Autenticación
@@ -36,6 +37,11 @@ services:
       - postgres
     networks:
       - medcore-network
+    volumes:
+      - ./ms-auth:/app
+      - /app/node_modules
+      - /app/dist
+    command: npm run dev  # ← Para desarrollo con hot-reload
 
   # -------------------------------
   # Frontend: Next.js App
@@ -57,6 +63,11 @@ services:
       - ms-auth     
     networks:
       - medcore-network
+    volumes:  
+    - ./medcore-frontend:/app
+    - /app/node_modules
+    - /app/.next
+    command: npm run dev  
 
 # -------------------------------
 # Volúmenes
