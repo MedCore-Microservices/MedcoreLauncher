@@ -1,25 +1,4 @@
-
-
 services:
-  # -------------------------------
-  # Base de datos PostgreSQL
-  # -------------------------------
-  postgres:
-    image: postgres:15-alpine
-    container_name: medcore-postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=medcoreuser
-      - POSTGRES_PASSWORD=medcoreuserpassword
-      - POSTGRES_DB=medcore_auth
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - medcore-network
-    
-
   # -------------------------------
   # Backend: Microservicio de Autenticación
   # -------------------------------
@@ -28,24 +7,22 @@ services:
     container_name: ms-auth
     restart: unless-stopped
     ports:
-      - "3001:3000"  
+      - "3001:3000"
     environment:
-      - DATABASE_URL=postgresql://medcoreuser:medcoreuserpassword@postgres:5432/medcore_auth
+      - DATABASE_URL=postgresql://postgres:medcoreuserpassword@db.vwqyqiffwfrxtkvtsqwq.supabase.co:5432/postgres?schema=public
       - JWT_SECRET=tu_jwt_secreto_super_seguro
-      - PORT=3000     
+      - PORT=3000
       - SMTP_USER=cristiancamiloosoriogranada@gmail.com
       - SMTP_PASSWORD=llnavznyrotndqvw
       - SMTP_HOST=smtp.gmail.com
       - SMTP_PORT=465
-    depends_on:
-      - postgres
     networks:
       - medcore-network
     volumes:
       - ./ms-auth:/app
       - /app/node_modules
       - /app/dist
-    command: npm run dev  # ← Para desarrollo con hot-reload
+    command: npm run dev
 
   # -------------------------------
   # Frontend: Next.js App
@@ -55,29 +32,23 @@ services:
     container_name: medcore-frontend
     restart: unless-stopped
     ports:
-      - "3000:3000"  # Accedes desde http://localhost:3000
+      - "3000:3000"
     environment:
-      - PORT=3000    # ← Next.js lo usará para el servidor
+      - PORT=3000
+      # Accede al backend usando el nombre del servicio en la red Docker
       - NEXT_PUBLIC_API_URL=http://localhost:3001
       - NEXTAUTH_TRUST_HOST=true
       - AUTH_SECRET=1P0whXBalPnjPzp1/WbVNCWXFEHmWwnKO0BPn+q3/zY=
       - NEXTAUTH_SECRET=1P0whXBalPnjPzp1/WbVNCWXFEHmWwnKO0BPn+q3/zY=
-      
     depends_on:
-      - ms-auth     
+      - ms-auth
     networks:
       - medcore-network
-    volumes:  
+    volumes:
       - ./medcore-frontend:/app
       - /app/node_modules
       - /app/.next
-    command: npm run dev  
-
-# -------------------------------
-# Volúmenes
-# -------------------------------
-volumes:
-  postgres_data:
+    command: npm run dev
 
 # -------------------------------
 # Redes
