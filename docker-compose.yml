@@ -9,7 +9,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:medcoreuserpassword@db.vwqyqiffwfrxtkvtsqwq.supabase.co:5432/postgres?schema=public
+      - DATABASE_URL=postgresql://postgres:VCSiuG1T1234@db.uejnlmaejilgjwpvdmwc.supabase.co:5432/postgres?schema=public&sslmode=require
       - JWT_SECRET=tu_jwt_secreto_super_seguro
       - PORT=3000
       - SMTP_USER=cristiancamiloosoriogranada@gmail.com
