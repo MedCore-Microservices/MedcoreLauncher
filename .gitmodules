@@ -4,3 +4,6 @@
 [submodule "medcore-frontend"]
 	path = medcore-frontend
 	url = https://github.com/MedCore-Microservices/Frontend-Medcore.git
+[submodule "ms-logica-negocio"]
+	path = ms-logica-negocio
+	url = https://github.com/MedCore-Microservices/ms-logica-negocio.git
